@@ -1,0 +1,22 @@
+version: '2'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - 8090:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: messenger
+      RABBITMQ_DEFAULT_PASS: messenger
+
+  php:
+    build: php
+    container_name: php
+    links:
+      - rabbitmq
+    volumes:
+      - ../:/var/www/html
+    environment:
+      APP_ENV: test
+      XDEBUG_CONFIG: remote_host=host.docker.internal

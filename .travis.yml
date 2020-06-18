@@ -1,0 +1,45 @@
+sudo: false
+
+addons:
+  apt:
+    packages:
+      - librabbitmq-dev
+      - texlive-latex-base
+
+language: php
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+    - $HOME/.local
+
+env:
+  global:
+    - COMPOSER_ARGS="--no-interaction --prefer-source"
+    - CS_CHECK=true
+
+matrix:
+  include:
+    - php: 7.4
+      env:
+        - TEST_COVERAGE=true
+# 2020-06-16: dependencies don't support PHP 8.0.0:
+# This package requires php ^7.4 but your PHP version (8.0.0-dev) does not satisfy that requirement.
+#    - php: nightly
+
+before_install:
+  - yes '' | pecl install amqp
+  - if [[ $TEST_COVERAGE != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
+  - composer self-update
+  - if [[ $TEST_COVERAGE == 'true' ]]; then composer require --dev --no-update php-coveralls/php-coveralls ; fi
+
+install:
+  - travis_retry composer install $COMPOSER_ARGS
+  - composer info
+
+script:
+  - if [[ $TEST_COVERAGE == 'true' ]]; then composer test-coverage ; else composer test ; fi
+  - if [[ $CS_CHECK == 'true' ]]; then composer cs-check ; fi
+
+after_success:
+  - if [[ $TEST_COVERAGE == 'true' ]]; then travis_retry php vendor/bin/php-coveralls -v --coverage_clover clover.xml --json_path coveralls-upload.json ; fi

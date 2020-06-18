@@ -1,0 +1,84 @@
+framework:
+    messenger:
+        buses:
+            messenger.bus.default:
+                # we have to disable the default middleware and explicitly
+                # define the order as there is no priority option, just adding
+                # our service to the middleware-option would at it before
+                # send_middleware
+                # @see https://github.com/symfony/symfony/issues/28568
+                default_middleware: false
+                middleware:
+                    - {id: 'add_bus_name_stamp_middleware', arguments: ['messenger.bus.default']}
+                    - reject_redelivered_message_middleware
+                    - dispatch_after_current_bus
+                    - failed_message_processing_middleware
+                    - send_message
+                    - handle_message
+                    - Vrok\MessengerReply\ReplyMiddleware
+
+        # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
+        failure_transport: failed
+
+        serializer:
+            default_serializer: 'messenger.transport.symfony_serializer'
+            symfony_serializer:
+                format: json
+                context: { }
+
+        transports:
+            # https://symfony.com/doc/current/messenger.html#transport-configuration
+            failed:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: pdf-service
+                        type: direct
+                        default_publish_routing_key: failed
+                    queues:
+                        failed:
+                            binding_keys: [failed]
+
+            input:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: pdf-service
+                        type: direct
+                        default_publish_routing_key: input
+                    queues:
+                        input:
+                            binding_keys: [input]
+                retry_strategy:
+                    max_retries: 3
+                    # milliseconds delay
+                    delay: 1000
+                    # causes the delay to be higher before each retry
+                    # e.g. 1 second delay, 2 seconds, 4 seconds
+                    multiplier: 2
+                    max_delay: 0
+
+            output:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: pdf-service
+                        type: direct
+                        default_publish_routing_key: output
+                    queues:
+                        output:
+                            binding_keys: [output]
+                        output_1:
+                            binding_keys: [output_1]
+                retry_strategy:
+                    max_retries: 3
+                    # milliseconds delay
+                    delay: 1000
+                    # causes the delay to be higher before each retry
+                    # e.g. 1 second delay, 2 seconds, 4 seconds
+                    multiplier: 2
+                    max_delay: 0
+
+        routing:
+            # Route your messages to the transports
+            '*': output
