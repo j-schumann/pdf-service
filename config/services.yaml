@@ -19,6 +19,16 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    
+#    Symfony\Bridge\Monolog\Processor\TokenProcessor:
+#        tags:
+#            - { name: monolog.processor, handler: logstash }
+
+    # add additional information to the logs
+    # hostname is automatically added (by logstash?)
+    Monolog\Processor\UidProcessor:
+        tags:
+            - { name: monolog.processor, handler: logstash }
 
     Vrok\MessengerReply\ReplyMiddleware:
         tags:
