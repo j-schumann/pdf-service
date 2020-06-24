@@ -24,8 +24,6 @@ class GeneratePdfMessageHandler implements MessageHandlerInterface, ServiceSubsc
      */
     public function __invoke(GeneratePdfMessage $message)
     {
-	$this->logger()->debug('recieving mess');
-
         $tex = $message->getLatex();
 
         $wrapper = new Wrapper();

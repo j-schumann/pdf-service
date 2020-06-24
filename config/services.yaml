@@ -30,6 +30,15 @@ services:
         tags:
             - { name: monolog.processor, handler: logstash }
 
+    # this subscriber is registered by default and called with the
+    # default logger (channel: app), we also want to reset the messenger channel
+    # so we duplicate the service here
+    app.event.reset_messenger_logger:
+        class: App\EventSubscriber\WorkerEventSubscriber
+        arguments: ['messng']
+        tags:
+            - { name: monolog.logger, channel: messenger }
+
     Vrok\MessengerReply\ReplyMiddleware:
         tags:
             - { name: monolog.logger, channel: messenger }

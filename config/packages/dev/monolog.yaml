@@ -9,7 +9,7 @@ monolog:
         default:
             type: buffer
             handler: grouped
-            channels: ["!app"]
+            channels: ["!app","!event"]
             level: debug
             bubble: false
         grouped:
