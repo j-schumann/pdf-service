@@ -20,6 +20,7 @@ class GeneratePdfMessageHandlerTest extends KernelTestCase
     public function testErrorsOnInvalidTex()
     {
         $msg = new GeneratePdfMessage('invalid LaTeX');
+        /** @var GeneratePdfMessageHandler $handler */
         $handler = self::$container->get(GeneratePdfMessageHandler::class);
 
         $this->expectException(UnrecoverableMessageHandlingException::class);
@@ -41,10 +42,12 @@ class GeneratePdfMessageHandlerTest extends KernelTestCase
             \end{document}'
         );
 
+        /** @var GeneratePdfMessageHandler $handler */
         $handler = self::$container->get(GeneratePdfMessageHandler::class);
-        $result = $handler($msg);
 
+        $result = $handler($msg);
         $this->assertInstanceOf(PdfResultMessage::class, $result);
+
         $pdfString = base64_decode($result->getPdfContent());
         $this->assertSame(0, strpos($pdfString, '%PDF-1.5'));
     }

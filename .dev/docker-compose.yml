@@ -10,9 +10,9 @@ services:
       RABBITMQ_DEFAULT_USER: messenger
       RABBITMQ_DEFAULT_PASS: messenger
 
-  php:
+  pdf-php:
     build: php
-    container_name: php
+    container_name: pdf-php
     links:
       - rabbitmq
     volumes:

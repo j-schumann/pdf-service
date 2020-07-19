@@ -26,6 +26,9 @@
     "doctrine/lexer": {
         "version": "1.2.1"
     },
+    "egulias/email-validator": {
+        "version": "2.1.18"
+    },
     "friendsofphp/php-cs-fixer": {
         "version": "2.2",
         "recipe": {
@@ -296,6 +299,18 @@
     "symfony/inflector": {
         "version": "v5.1.1"
     },
+    "symfony/mailer": {
+        "version": "4.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.3",
+            "ref": "15658c2a0176cda2e7dba66276a2030b52bd81b2"
+        },
+        "files": [
+            "config/packages/mailer.yaml"
+        ]
+    },
     "symfony/maker-bundle": {
         "version": "1.0",
         "recipe": {
@@ -316,6 +331,9 @@
         "files": [
             "config/packages/messenger.yaml"
         ]
+    },
+    "symfony/mime": {
+        "version": "v5.1.2"
     },
     "symfony/monolog-bridge": {
         "version": "v5.1.0"
@@ -355,6 +373,9 @@
     },
     "symfony/polyfill-intl-grapheme": {
         "version": "v1.17.0"
+    },
+    "symfony/polyfill-intl-idn": {
+        "version": "v1.17.1"
     },
     "symfony/polyfill-intl-normalizer": {
         "version": "v1.17.0"
@@ -464,7 +485,13 @@
     "vrok/messenger-reply": {
         "version": "dev-master"
     },
+    "vrok/monitoring-bundle": {
+        "version": "dev-master"
+    },
     "vrok/pdf-service-contracts": {
+        "version": "dev-master"
+    },
+    "vrok/symfony-addons": {
         "version": "dev-master"
     },
     "vrok/tex-wrapper": {

@@ -1,0 +1,3 @@
+vrok_monitoring:
+  monitor_address: '%env(MONITOR_ADDRESS)%'
+  app_name: PDF-Service

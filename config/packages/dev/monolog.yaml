@@ -26,20 +26,10 @@ monolog:
             level: debug
             channels: ["!event"]
             publisher:
-                hostname: 172.19.1.200
-                port: 12201
-#                hostname: '%env(GELF_SERVER)%'
-#                port: '%env(GELF_PORT)%'
+                hostname: '%env(GELF_SERVER)%'
+                port: '%env(GELF_PORT)%'
                 chunk_size: 8154
             include_stacktraces: true
-        # uncomment to get logging in your browser
-        # you may have to allow bigger header sizes in your Web server configuration
-        #firephp:
-        #    type: firephp
-        #    level: info
-        #chromephp:
-        #    type: chromephp
-        #    level: info
         console:
             type: console
             process_psr_3_messages: false

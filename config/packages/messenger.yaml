@@ -20,11 +20,13 @@ framework:
         # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
         failure_transport: failed
 
-        serializer:
-            default_serializer: 'messenger.transport.symfony_serializer'
-            symfony_serializer:
-                format: json
-                context: { }
+# deactivated because of https://github.com/symfony/symfony/pull/37324 &
+# https://github.com/symfony/symfony/issues/37414
+#        serializer:
+#            default_serializer: 'messenger.transport.symfony_serializer'
+#            symfony_serializer:
+#                format: json
+#                context: { }
 
         transports:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
@@ -82,3 +84,5 @@ framework:
         routing:
             # Route your messages to the transports
             '*': output
+
+            'Symfony\Component\Mailer\Messenger\SendEmailMessage':  input
