@@ -296,9 +296,6 @@
     "symfony/http-kernel": {
         "version": "v5.1.0"
     },
-    "symfony/inflector": {
-        "version": "v5.1.1"
-    },
     "symfony/mailer": {
         "version": "4.3",
         "recipe": {
