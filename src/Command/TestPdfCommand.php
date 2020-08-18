@@ -15,14 +15,17 @@ use Vrok\PdfService\Contracts\GeneratePdfMessage;
 
 class TestPdfCommand extends Command
 {
+    /**
+     * @var string
+     */
     protected static $defaultName = 'pdf:test';
 
     private MessageBusInterface $bus;
 
-    public function __construct(MessageBusInterface $bus)
+    public function __construct(MessageBusInterface $bus, string $name = null)
     {
-        parent::__construct();
         $this->bus = $bus;
+        parent::__construct($name);
     }
 
     protected function configure(): void
@@ -30,7 +33,7 @@ class TestPdfCommand extends Command
         $this->setDescription('Push a test GeneratePdfMessage to the input queue');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $m = new GeneratePdfMessage(
         '\documentclass{article}
@@ -47,8 +50,8 @@ class TestPdfCommand extends Command
 
         $e = new Envelope($m);
         $this->bus->dispatch($e
-            ->with(new ReplyToStamp('output'))
-            ->with(new AmqpStamp('input'))
+            ->with(new ReplyToStamp('pdf-output'))
+            ->with(new AmqpStamp('pdf-input'))
         );
 
         return 0;

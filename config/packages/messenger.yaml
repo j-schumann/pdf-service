@@ -4,7 +4,7 @@ framework:
             messenger.bus.default:
                 # we have to disable the default middleware and explicitly
                 # define the order as there is no priority option, just adding
-                # our service to the middleware-option would at it before
+                # our service to the middleware-option would add it before
                 # send_middleware
                 # @see https://github.com/symfony/symfony/issues/28568
                 default_middleware: false
@@ -17,7 +17,6 @@ framework:
                     - handle_message
                     - Vrok\MessengerReply\ReplyMiddleware
 
-        # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
         failure_transport: failed
 
 # deactivated because of https://github.com/symfony/symfony/pull/37324 &
@@ -29,7 +28,6 @@ framework:
 #                context: { }
 
         transports:
-            # https://symfony.com/doc/current/messenger.html#transport-configuration
             failed:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 options:
@@ -47,16 +45,13 @@ framework:
                     exchange:
                         name: pdf-service
                         type: direct
-                        default_publish_routing_key: input
+                        default_publish_routing_key: pdf-input
                     queues:
                         input:
-                            binding_keys: [input]
+                            binding_keys: [pdf-input]
                 retry_strategy:
                     max_retries: 3
-                    # milliseconds delay
                     delay: 1000
-                    # causes the delay to be higher before each retry
-                    # e.g. 1 second delay, 2 seconds, 4 seconds
                     multiplier: 2
                     max_delay: 0
 
@@ -66,23 +61,19 @@ framework:
                     exchange:
                         name: pdf-service
                         type: direct
-                        default_publish_routing_key: output
+                        default_publish_routing_key: pdf-output
                     queues:
                         output:
-                            binding_keys: [output]
-                        output_1:
-                            binding_keys: [output_1]
+                            binding_keys: [pdf-output]
                 retry_strategy:
                     max_retries: 3
-                    # milliseconds delay
                     delay: 1000
-                    # causes the delay to be higher before each retry
-                    # e.g. 1 second delay, 2 seconds, 4 seconds
                     multiplier: 2
                     max_delay: 0
 
         routing:
-            # Route your messages to the transports
-            '*': output
-
+            # '*' catches all messages, even when they are also routed otherwise
+            #'*': output
+            'Vrok\PdfService\Contracts\GeneratePdfMessage': input
+            'Vrok\PdfService\Contracts\PdfResultMessage': output
             'Symfony\Component\Mailer\Messenger\SendEmailMessage':  input
