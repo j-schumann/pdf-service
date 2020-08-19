@@ -47,7 +47,7 @@ framework:
                         type: direct
                         default_publish_routing_key: pdf-input
                     queues:
-                        input:
+                        pdf-input:
                             binding_keys: [pdf-input]
                 retry_strategy:
                     max_retries: 3
@@ -63,7 +63,7 @@ framework:
                         type: direct
                         default_publish_routing_key: pdf-output
                     queues:
-                        output:
+                        pdf-output:
                             binding_keys: [pdf-output]
                 retry_strategy:
                     max_retries: 3
